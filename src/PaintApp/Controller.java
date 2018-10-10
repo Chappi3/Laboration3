@@ -4,6 +4,7 @@ import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
@@ -57,7 +58,21 @@ public class Controller {
     }
 
     private void draw() {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        double size = Double.parseDouble(brushSize.getValue().toString());
+        Point2D point = model.getObservablePoints().get(model.getObservablePoints().size()-1);
 
+        if (eraser.isSelected()) {
+            gc.clearRect(point.getX() - size / 2, point.getY() - size / 2, size, size);
+        }
+        else if (shapes.getValue().equals("Circle")) {
+            gc.setFill(colorPicker.getValue());
+            gc.fillOval(point.getX() - size / 2, point.getY() - size / 2, size, size);
+        }
+        else if (shapes.getValue().equals("Square")) {
+            gc.setFill(colorPicker.getValue());
+            gc.fillRect(point.getX() - size / 2, point.getY() - size / 2, size, size);
+        }
     }
 
     public void undo() {
