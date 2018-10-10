@@ -1,5 +1,6 @@
 package PaintApp;
 
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 public class Controller {
@@ -14,4 +15,23 @@ public class Controller {
 
     }
 
+    public void onOpen() {
+
+    }
+
+    public void onSave() {
+    }
+
+    public void onExit() {
+    }
+
+    public void canvasClicked(MouseEvent event) {
+
+    }
+
+    public void undo() {
+    }
+
+    public void redo() {
+    }
 }
