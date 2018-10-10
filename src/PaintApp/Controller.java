@@ -1,4 +1,4 @@
-package sample;
+package PaintApp;
 
 public class Controller {
 }
