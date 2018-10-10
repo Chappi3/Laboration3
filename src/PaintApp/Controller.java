@@ -52,7 +52,8 @@ public class Controller {
     }
 
     public void canvasClicked(MouseEvent event) {
-
+        Point2D point = new Point2D(event.getX(), event.getY());
+        model.getObservablePoints().add(point);
     }
 
     private void draw() {
