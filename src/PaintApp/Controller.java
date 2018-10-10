@@ -1,5 +1,6 @@
 package PaintApp;
 
+import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
@@ -90,6 +91,6 @@ public class Controller {
     }
 
     public void onExit() {
-
+        Platform.exit();
     }
 }
