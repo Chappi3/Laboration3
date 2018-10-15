@@ -2,6 +2,7 @@ package PaintApp;
 
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
@@ -9,9 +10,13 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
+import javax.imageio.ImageIO;
+import java.io.File;
 
 public class Controller {
 
@@ -87,7 +92,15 @@ public class Controller {
     }
 
     public void onSave() {
-
+        Platform.runLater(() -> {
+            try {
+                Image snapshot = canvas.snapshot(null, null);
+                ImageIO.write(SwingFXUtils.fromFXImage(snapshot,null),"png",new File("paint.png"));
+            }
+            catch (Exception e) {
+                System.out.println("Failed to save image: "+e);
+            }
+        });
     }
 
     public void onExit() {
