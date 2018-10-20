@@ -32,7 +32,7 @@
                     <MenuItem fx:id="menuRedo" onAction="#redo" text="Redo" />
                 </Menu>
                 <Menu text="Info">
-                    <MenuItem fx:id="menuAbout" text="About" />
+                    <MenuItem fx:id="menuAbout" onAction="#onAbout" text="About" />
                 </Menu>
             </MenuBar>
             <ToolBar>
@@ -44,9 +44,9 @@
                     <Label text="Color:" />
                     <ColorPicker fx:id="colorPicker" />
                     <Label text="Select:" />
-                    <CheckBox fx:id="selection" onAction="#changedChoiceBox" />
+                    <CheckBox fx:id="selection" onAction="#changedCheckBox" />
                     <Label text="Eraser:" />
-                    <CheckBox fx:id="eraser" onAction="#changedChoiceBox" />
+                    <CheckBox fx:id="eraser" onAction="#changedCheckBox" />
                     <Separator orientation="VERTICAL" prefHeight="0.0" prefWidth="2.0" />
                     <Button fx:id="undoButton" onAction="#undo" text="Undo" />
                     <Button fx:id="redoButton" onAction="#redo" text="Redo" />

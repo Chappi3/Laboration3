@@ -3,6 +3,7 @@ package PaintApp;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
@@ -124,16 +125,12 @@ public class Controller {
                 ShapeFactory.createShape(model,type,size,size,color,position);
                 System.out.println("New square!");
             }
-
-            // Old code
-            /*Point2D point = new Point2D(event.getX(), event.getY());
-            model.getObservablePoints().add(point);*/
         }
         // more mouse events here
     }
 
     // When a choice box is changed
-    public void changedChoiceBox() {
+    public void changedCheckBox() {
         if (!selection.isSelected() && !eraser.isSelected()) {
             eraser.setDisable(false);
             selection.setDisable(false);
@@ -146,21 +143,16 @@ public class Controller {
         }
     }
 
-    private void draw() {
+    public void draw() {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         double size = Double.parseDouble(brushSize.getValue().toString());
         Shape shape = model.getShapeList().get(model.getShapeList().size()-1);
 
         if (eraser.isSelected()) {
-            gc.clearRect(shape.getPosition().getX() - size / 2, shape.getPosition().getY() - size / 2, size, size);
+            shape.eraseShape(gc);
         }
-        else if (shapes.getValue().equals("Circle")) {
-            gc.setFill(colorPicker.getValue());
-            gc.fillOval(shape.getPosition().getX() - size / 2, shape.getPosition().getY() - size / 2, size, size);
-        }
-        else if (shapes.getValue().equals("Square")) {
-            gc.setFill(colorPicker.getValue());
-            gc.fillRect(shape.getPosition().getX() - size / 2, shape.getPosition().getY() - size / 2, size, size);
+        else {
+            shape.drawShape(gc);
         }
     }
 
@@ -210,6 +202,10 @@ public class Controller {
     public void onExit() {
         // TODO: exit confirmation
         Platform.exit();
+    }
+
+    public void onAbout() {
+        // TODO: add some info about the paint app here in a new window.
     }
 
     public void undo() {
