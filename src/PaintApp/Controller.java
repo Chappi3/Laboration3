@@ -7,9 +7,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ColorPicker;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -25,7 +23,8 @@ import java.io.IOException;
 public class Controller {
 
     private Stage stage;
-    Model model = new Model();
+    private Model model = new Model();
+
     @FXML
     private Canvas canvas;
     @FXML
@@ -35,7 +34,21 @@ public class Controller {
     @FXML
     private ChoiceBox shapes;
     @FXML
+    private CheckBox selection;
+    @FXML
     private CheckBox eraser;
+    @FXML
+    private Button undoButton;
+    @FXML
+    private Button redoButton;
+    @FXML
+    private MenuItem menuUndo;
+    @FXML
+    private MenuItem menuRedo;
+    @FXML
+    private MenuItem menuAbout;
+    @FXML
+    private Label mouseCoordinates;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -65,8 +78,72 @@ public class Controller {
 
     }
 
-    public void canvasClicked(MouseEvent event) {
+    // when moving mouse on canvas
+    public void canvasMouseCoordinates(MouseEvent event) {
+        // mouse coordinates label
+        mouseCoordinates.setText(String.format("Mouse Coordinates X: %g Y: %g",event.getX(),event.getY()));
+    }
 
+    // when clicking on canvas
+    public void canvasEvents(MouseEvent event) {
+        // mouseOne for make a dot
+        if (event.isPrimaryButtonDown()) {
+            double size = Double.parseDouble(brushSize.getValue().toString());
+            Color color = colorPicker.getValue();
+            Point2D position = new Point2D(event.getX(), event.getY());
+
+            // New code
+            if (eraser.isSelected() || selection.isSelected()) {
+
+                if (eraser.isSelected()) {
+                    String type = "eraser";
+                    ShapeFactory.createShape(model,type,size,size,color,position);
+                    System.out.println("New eraser!");
+                }
+
+                if (selection.isSelected()) {
+                    for (Shape s : model.getShapeList()) {
+                        // TODO: add the size of the object
+                        //Point2D area =  (s.getPosition() - s.getSizeX() / 2),(s.getPosition() - s.getSizeY() / 2);
+                        if (s.getPosition() == position) {//check if mouse is clicked within shape
+                            // TODO: add selected shape data to be edited in th left side view. color,size etc.
+                            System.out.println("Clicked a "+s.getClass().getName());
+                        }
+                    }
+                }
+            }
+
+            else if (shapes.getValue().equals("Circle")) {
+                String type = "circle";
+                ShapeFactory.createShape(model,type,size,size,color,position);
+                System.out.println("New circle!");
+            }
+
+            else if (shapes.getValue().equals("Square")) {
+                String type = "square";
+                ShapeFactory.createShape(model,type,size,size,color,position);
+                System.out.println("New square!");
+            }
+
+            // Old code
+            /*Point2D point = new Point2D(event.getX(), event.getY());
+            model.getObservablePoints().add(point);*/
+        }
+        // more mouse events here
+    }
+
+    // When a choice box is changed
+    public void changedChoiceBox() {
+        if (!selection.isSelected() && !eraser.isSelected()) {
+            eraser.setDisable(false);
+            selection.setDisable(false);
+        }
+        if (selection.isSelected()) {
+            eraser.setDisable(true);
+        }
+        if (eraser.isSelected()) {
+            selection.setDisable(true);
+        }
     }
 
     private void draw() {
@@ -85,18 +162,6 @@ public class Controller {
             gc.setFill(colorPicker.getValue());
             gc.fillRect(shape.getPosition().getX() - size / 2, shape.getPosition().getY() - size / 2, size, size);
         }
-    }
-
-    public void undo() {
-
-    }
-
-    public void redo() {
-
-    }
-
-    public void onOpen() {
-
     }
 
     public void onSave() {
@@ -143,6 +208,25 @@ public class Controller {
     }
 
     public void onExit() {
+        // TODO: exit confirmation
         Platform.exit();
+    }
+
+    public void undo() {
+        undoButton.setDisable(true);
+        menuUndo.setDisable(true);
+        // TODO: implement undo function
+
+        //undoLastShape();
+
+    }
+
+    public void redo() {
+        redoButton.setDisable(true);
+        menuRedo.setDisable(true);
+        // TODO: implement redo function
+
+        //redoLastShape();
+
     }
 }
