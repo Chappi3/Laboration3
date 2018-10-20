@@ -2,32 +2,25 @@ package PaintApp;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.Point2D;
 
 import java.util.ArrayList;
 
 public class Model {
 
-    private ObservableList<Point2D> observablePoints = FXCollections.observableList(new ArrayList<>());
-    private ObservableList<String> observableShapes = FXCollections.observableList(new ArrayList<>());
+    private ObservableList<String> shapeChoices = FXCollections.observableList(new ArrayList<>());
+    private ObservableList<Shape> shapeList = FXCollections.observableList(new ArrayList<>());
 
-    public Model() {
-
+    public ObservableList<Shape> getShapeList() {
+        return shapeList;
+    }
+    public void setShapeList(ObservableList<Shape> shapeList) {
+        this.shapeList = shapeList;
     }
 
-    public ObservableList<Point2D> getObservablePoints() {
-        return observablePoints;
+    public ObservableList<String> getShapeChoices() {
+        return shapeChoices;
     }
-
-    public void setObservablePoints(ObservableList<Point2D> observablePoints) {
-        this.observablePoints = observablePoints;
-    }
-
-    public ObservableList<String> getObservableShapes() {
-        return observableShapes;
-    }
-
-    public void setObservableShapes(ObservableList<String> observableShapes) {
-        this.observableShapes = observableShapes;
+    public void setShapeChoices(ObservableList<String> shapeChoices) {
+        this.shapeChoices = shapeChoices;
     }
 }
