@@ -20,7 +20,6 @@ public class Circle extends Shape {
     @Override
     public String toString() {
         String color = colorToString(getColor());
-        // <circle cx="positionX" cy="positionY" r="size" fill="color" />
         return ("<circle cx=\""+getPosition().getX()+"\" cy=\""+getPosition().getY()+"\" r=\""+getSizeX()+"\" fill=\""+color+"\" />");
     }
 }

@@ -3,7 +3,6 @@ package PaintApp;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
@@ -77,6 +76,13 @@ public class Controller {
         // default size
         brushSize.setValue("12");
 
+        // redo button disabled as default
+        redoButton.setDisable(true);
+        menuRedo.setDisable(true);
+
+        // undo button disabled as default
+        undoButton.setDisable(true);
+        menuUndo.setDisable(true);
     }
 
     // when moving mouse on canvas
@@ -126,8 +132,7 @@ public class Controller {
                 System.out.println("New square!");
             }
         }
-        // more mouse events here
-    }
+    } // End of CanvasEvents
 
     // When a choice box is changed
     public void changedCheckBox() {
@@ -145,7 +150,6 @@ public class Controller {
 
     public void draw() {
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        double size = Double.parseDouble(brushSize.getValue().toString());
         Shape shape = model.getShapeList().get(model.getShapeList().size()-1);
 
         if (eraser.isSelected()) {
