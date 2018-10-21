@@ -10,6 +10,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -47,6 +48,8 @@ public class Controller {
     private MenuItem menuRedo;
     @FXML
     private ListView listView;
+    @FXML
+    private Pane editPane;
     @FXML
     private Label mouseCoordinates;
 
@@ -109,11 +112,11 @@ public class Controller {
                 }
 
                 if (selection.isSelected()) {
-                    for (Shape shape : model.getShapeList()) {
-                        // TODO: add the size of the object
-                        if (shape.shapeArea(position.getX(),position.getY())) {//check if mouse is clicked within shape
-                            // TODO: add selected shape data to be edited in th left side view. color,size etc.
-                            System.out.println("Clicked a "+shape.getClass().getName());
+                    for (int i = model.getShapeList().size()-1; i >= 0; i--) {
+                        if (model.getShapeList().get(i).shapeArea(position.getX(),position.getY())) {//check if mouse is clicked within shape
+                            listView.getSelectionModel().select(i);
+                            System.out.println("Clicked a "+model.getShapeList().get(i).toString());
+                            // TODO: add selected shape data to be edited in the right side view. color,size etc.
                         }
                     }
                 }
