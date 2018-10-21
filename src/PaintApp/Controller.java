@@ -46,7 +46,7 @@ public class Controller {
     @FXML
     private MenuItem menuRedo;
     @FXML
-    private MenuItem menuAbout;
+    private ListView listView;
     @FXML
     private Label mouseCoordinates;
 
@@ -57,6 +57,7 @@ public class Controller {
     public void init() {
         // Make our bindings here, everything is loaded.
         model.getShapeList().addListener((ListChangeListener<Shape>) c -> draw());
+        listView.setItems(model.getShapeList());
 
         // Shapes choice box
         model.getShapeChoices().addAll("Circle","Square");
@@ -93,13 +94,12 @@ public class Controller {
 
     // when clicking on canvas
     public void canvasEvents(MouseEvent event) {
-        // mouseOne for make a dot
+        // mouseOne event
         if (event.isPrimaryButtonDown()) {
             double size = Double.parseDouble(brushSize.getValue().toString());
             Color color = colorPicker.getValue();
             Point2D position = new Point2D(event.getX(), event.getY());
 
-            // New code
             if (eraser.isSelected() || selection.isSelected()) {
 
                 if (eraser.isSelected()) {
@@ -109,12 +109,11 @@ public class Controller {
                 }
 
                 if (selection.isSelected()) {
-                    for (Shape s : model.getShapeList()) {
+                    for (Shape shape : model.getShapeList()) {
                         // TODO: add the size of the object
-                        //Point2D area =  (s.getPosition() - s.getSizeX() / 2),(s.getPosition() - s.getSizeY() / 2);
-                        if (s.getPosition() == position) {//check if mouse is clicked within shape
+                        if (shape.shapeArea(position.getX(),position.getY())) {//check if mouse is clicked within shape
                             // TODO: add selected shape data to be edited in th left side view. color,size etc.
-                            System.out.println("Clicked a "+s.getClass().getName());
+                            System.out.println("Clicked a "+shape.getClass().getName());
                         }
                     }
                 }
@@ -132,7 +131,16 @@ public class Controller {
                 System.out.println("New square!");
             }
         }
-    } // End of CanvasEvents
+    }
+
+    // when something on the list view is clicked
+    public void listViewPressed(MouseEvent event) {
+        if (event.isPrimaryButtonDown()) {
+            Shape shape = (Shape)listView.getSelectionModel().getSelectedItem();
+            shape.setColor(Color.GRAY);
+            // TODO: implement selection and edit selected object
+        }
+    }
 
     // When a choice box is changed
     public void changedCheckBox() {
@@ -191,7 +199,7 @@ public class Controller {
                     bufferedWriter.write("<svg height=\""+canvas.getHeight()+"\" width=\""+canvas.getWidth()+"\" xmlns=\"http://www.w3.org/2000/svg\">");
                     bufferedWriter.newLine();
                     for (Shape shape : model.getShapeList()) {
-                        bufferedWriter.write(shape.toString());
+                        bufferedWriter.write(shape.toSVG());
                         bufferedWriter.newLine();
                     }
                     bufferedWriter.write("</svg>");

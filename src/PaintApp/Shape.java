@@ -56,6 +56,20 @@ public abstract class Shape implements DrawShape, EraseShape {
 
     }
 
+    public String toSVG() {
+        return null;
+    }
+
+    // checks if mouse coordinates is in the are of a shape
+    public boolean shapeArea(double mouseX,double mouseY) {
+
+        if (mouseX > getPosition().getX() - getSizeX() && mouseX < getPosition().getX() + getSizeX()
+        && mouseY > getPosition().getY() - getSizeY() && mouseY < getPosition().getY() + getSizeY()) {
+            return true;
+        }
+        return false;
+    }
+
     // convert hex to stringRGB for svg
     public static String colorToString(Color color )
     {

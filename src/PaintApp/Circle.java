@@ -11,6 +11,12 @@ public class Circle extends Shape {
     }
 
     @Override
+    public String toSVG() {
+        String color = colorToString(getColor());
+        return ("<circle cx=\""+getPosition().getX()+"\" cy=\""+getPosition().getY()+"\" r=\""+getSizeX()+"\" fill=\""+color+"\" />");
+    }
+
+    @Override
     public void drawShape(GraphicsContext gc) {
         gc.setFill(getColor());
         gc.fillOval(getPosition().getX() - getSizeX() / 2,
@@ -19,7 +25,7 @@ public class Circle extends Shape {
 
     @Override
     public String toString() {
-        String color = colorToString(getColor());
-        return ("<circle cx=\""+getPosition().getX()+"\" cy=\""+getPosition().getY()+"\" r=\""+getSizeX()+"\" fill=\""+color+"\" />");
+        String type = "Circle";
+        return (type);
     }
 }

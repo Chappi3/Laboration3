@@ -11,6 +11,11 @@ public class Eraser extends Shape {
     }
 
     @Override
+    public String toSVG() {
+        return ("<rect x=\""+getPosition().getX()+"\" y=\""+getPosition().getY()+"\" width=\""+getSizeX()+"\" height=\""+getSizeY()+"\" fill=\"clear\"/>");
+    }
+
+    @Override
     public void eraseShape(GraphicsContext gc) {
         gc.clearRect(getPosition().getX() - getSizeX() / 2,
                 getPosition().getY() - getSizeY() / 2,getSizeX(),getSizeY());
@@ -18,6 +23,7 @@ public class Eraser extends Shape {
 
     @Override
     public String toString() {
-        return ("<rect x=\""+getPosition().getX()+"\" y=\""+getPosition().getY()+"\" width=\""+getSizeX()+"\" height=\""+getSizeY()+"\" fill=\"clear\"/>");
+        String type = "Eraser";
+        return (type);
     }
 }

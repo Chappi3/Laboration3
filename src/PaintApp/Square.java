@@ -11,6 +11,12 @@ public class Square extends Shape implements DrawShape {
     }
 
     @Override
+    public String toSVG() {
+        String color = colorToString(getColor());
+        return ("<rect x=\""+getPosition().getX()+"\" y=\""+getPosition().getY()+"\" width=\""+getSizeX()+"\" height=\""+getSizeY()+"\" fill=\""+color+"\"/>");
+    }
+
+    @Override
     public void drawShape(GraphicsContext gc) {
         gc.setFill(getColor());
         gc.fillRect(getPosition().getX() - getSizeX() / 2,
@@ -19,7 +25,7 @@ public class Square extends Shape implements DrawShape {
 
     @Override
     public String toString() {
-        String color = colorToString(getColor());
-        return ("<rect x=\""+getPosition().getX()+"\" y=\""+getPosition().getY()+"\" width=\""+getSizeX()+"\" height=\""+getSizeY()+"\" fill=\""+color+"\"/>");
+        String type = "Square";
+        return (type);
     }
 }
