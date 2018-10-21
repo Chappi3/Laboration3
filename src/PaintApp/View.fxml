@@ -77,7 +77,6 @@
       <VBox prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
             <ListView fx:id="listView" onMousePressed="#listViewPressed" prefHeight="260.0" prefWidth="200.0" />
-            <Pane fx:id="editPane" prefHeight="341.0" prefWidth="200.0" />
          </children>
       </VBox>
    </right>

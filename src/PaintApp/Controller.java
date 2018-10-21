@@ -10,7 +10,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -22,9 +21,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class Controller {
-
-    private Stage stage;
-    private Model model = new Model();
 
     @FXML
     private Canvas canvas;
@@ -49,9 +45,13 @@ public class Controller {
     @FXML
     private ListView listView;
     @FXML
-    private Pane editPane;
+    private SplitPane editPane;
     @FXML
     private Label mouseCoordinates;
+
+    private Stage stage;
+    private Model model = new Model();
+    private GraphicsContext gc;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -109,31 +109,32 @@ public class Controller {
                 if (eraser.isSelected()) {
                     String type = "eraser";
                     ShapeFactory.createShape(model,type,size,size,color,position);
-                    System.out.println("New eraser!");
                 }
                 // if selection is selected
                 if (selection.isSelected()) {
-                    for (int i = model.getShapeList().size()-1; i >= 0; i--) {
-                        if (model.getShapeList().get(i).shapeArea(position.getX(),position.getY())) {//check if mouse is clicked within shape
-                            listView.getSelectionModel().select(i);
-                            System.out.println("Clicked a "+model.getShapeList().get(i).toString());
-                            model.getShapeList().get(i).setColor(Color.GRAY);
-                            // TODO: add selected shape data to be edited in the right side view. color,size etc.
-                        }
-                    }
+                    Shape selectedShape = shapeSelection(position);
+                    colorPicker.setValue(selectedShape.getColor());
+                    brushSize.setValue(selectedShape.getSizeX());
+                    colorPicker.setOnAction(event1 -> selectedShape.setColor(colorPicker.getValue()));
+                    brushSize.setOnAction(event2 -> {
+                        double sizeEdit = Double.parseDouble(brushSize.getValue().toString());
+                        selectedShape.setSizeX(sizeEdit);
+                        selectedShape.setSizeY(sizeEdit);
+                    });
+                    selectedShape.drawShape(gc);
+                    // TODO: want info to be shown to the right below the list view.
+                    // also modified in the same place with a button that does the changes when it's pressed
                 }
             }
             // else if the shape circle is selected
             else if (shapes.getValue().equals("Circle")) {
                 String type = "circle";
                 ShapeFactory.createShape(model,type,size,size,color,position);
-                System.out.println("New circle!");
             }
             // else if the shape square is selected
             else if (shapes.getValue().equals("Square")) {
                 String type = "square";
                 ShapeFactory.createShape(model,type,size,size,color,position);
-                System.out.println("New square!");
             }
         }
     }
@@ -141,10 +142,34 @@ public class Controller {
     // when something on the list view is clicked
     public void listViewPressed(MouseEvent event) {
         if (event.isPrimaryButtonDown()) {
-            Shape shape = (Shape)listView.getSelectionModel().getSelectedItem();
-            shape.setColor(Color.GRAY);
-            // TODO: implement selection and edit selected object
+            Shape selectedShape = (Shape)listView.getSelectionModel().getSelectedItem();
+            if (selection.isSelected()) {
+                colorPicker.setValue(selectedShape.getColor());
+                brushSize.setValue(selectedShape.getSizeX());
+                colorPicker.setOnAction(event1 -> selectedShape.setColor(colorPicker.getValue()));
+                brushSize.setOnAction(event2 -> {
+                    double size = Double.parseDouble(brushSize.getValue().toString());
+                    selectedShape.setSizeX(size);
+                    selectedShape.setSizeY(size);
+                });
+                selectedShape.drawShape(gc);
+                // TODO: want info to be shown to the right below the list view.
+                // also modified in the same place with a button that does the changes when it's pressed
+            }
         }
+    }
+
+    // for selecting a shape based of mouse position and shape area
+    private Shape shapeSelection(Point2D position) {
+        for (int i = model.getShapeList().size()-1; i >= 0; i--) {
+            if (model.getShapeList().get(i).shapeArea(position.getX(),position.getY())) { // check if mouse is clicked within shape
+                listView.getSelectionModel().select(i);
+                Shape selectedShape = model.getShapeList().get(i);
+                System.out.println("Clicked a "+model.getShapeList().get(i).toString());
+                return selectedShape;
+            }
+        }
+        return null;
     }
 
     // When a check box is changed
@@ -166,8 +191,9 @@ public class Controller {
 
     // draws the canvas
     public void draw() {
-        GraphicsContext gc = canvas.getGraphicsContext2D();
         Shape shape = model.getShapeList().get(model.getShapeList().size()-1);
+        gc = canvas.getGraphicsContext2D();
+
         // if eraser is selected, draws eraser shape
         if (eraser.isSelected()) {
             shape.eraseShape(gc);
