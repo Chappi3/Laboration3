@@ -6,11 +6,13 @@ import javafx.scene.paint.Color;
 
 public abstract class Shape implements DrawShape, EraseShape {
 
+    // fields
     private double sizeX;
     private double sizeY;
     private Color color;
     private Point2D position;
 
+    // constructor
     public Shape(double sizeX, double sizeY, Color color, Point2D position) {
         this.sizeX = sizeX;
         this.sizeY = sizeY;
@@ -18,6 +20,7 @@ public abstract class Shape implements DrawShape, EraseShape {
         this.position = position;
     }
 
+    // getters and setters
     public double getSizeX() {
         return sizeX;
     }
@@ -46,16 +49,19 @@ public abstract class Shape implements DrawShape, EraseShape {
         this.position = position;
     }
 
+    // for shapes to be drawn
     @Override
     public void drawShape(GraphicsContext gc) {
 
     }
 
+    // for the eraser to be drawn
     @Override
     public void eraseShape(GraphicsContext gc) {
 
     }
 
+    // for shapes to be in correct string format
     public String toSVG() {
         return null;
     }
