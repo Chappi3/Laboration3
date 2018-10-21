@@ -57,6 +57,7 @@ public class Controller {
         this.stage = stage;
     }
 
+    // when the application starts
     public void init() {
         // Make our bindings here, everything is loaded.
         model.getShapeList().addListener((ListChangeListener<Shape>) c -> draw());
@@ -102,32 +103,33 @@ public class Controller {
             double size = Double.parseDouble(brushSize.getValue().toString());
             Color color = colorPicker.getValue();
             Point2D position = new Point2D(event.getX(), event.getY());
-
+            // if eraser or selection is selected
             if (eraser.isSelected() || selection.isSelected()) {
-
+                // if eraser is selected
                 if (eraser.isSelected()) {
                     String type = "eraser";
                     ShapeFactory.createShape(model,type,size,size,color,position);
                     System.out.println("New eraser!");
                 }
-
+                // if selection is selected
                 if (selection.isSelected()) {
                     for (int i = model.getShapeList().size()-1; i >= 0; i--) {
                         if (model.getShapeList().get(i).shapeArea(position.getX(),position.getY())) {//check if mouse is clicked within shape
                             listView.getSelectionModel().select(i);
                             System.out.println("Clicked a "+model.getShapeList().get(i).toString());
+                            model.getShapeList().get(i).setColor(Color.GRAY);
                             // TODO: add selected shape data to be edited in the right side view. color,size etc.
                         }
                     }
                 }
             }
-
+            // else if the shape circle is selected
             else if (shapes.getValue().equals("Circle")) {
                 String type = "circle";
                 ShapeFactory.createShape(model,type,size,size,color,position);
                 System.out.println("New circle!");
             }
-
+            // else if the shape square is selected
             else if (shapes.getValue().equals("Square")) {
                 String type = "square";
                 ShapeFactory.createShape(model,type,size,size,color,position);
@@ -145,32 +147,38 @@ public class Controller {
         }
     }
 
-    // When a choice box is changed
+    // When a check box is changed
     public void changedCheckBox() {
+        // if no checkbox is selected
         if (!selection.isSelected() && !eraser.isSelected()) {
             eraser.setDisable(false);
             selection.setDisable(false);
         }
+        // if selection is selected
         if (selection.isSelected()) {
             eraser.setDisable(true);
         }
+        // if eraser is selected
         if (eraser.isSelected()) {
             selection.setDisable(true);
         }
     }
 
+    // draws the canvas
     public void draw() {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         Shape shape = model.getShapeList().get(model.getShapeList().size()-1);
-
+        // if eraser is selected, draws eraser shape
         if (eraser.isSelected()) {
             shape.eraseShape(gc);
         }
+        // else it draws the selected shape
         else {
             shape.drawShape(gc);
         }
     }
 
+    // when save is clicked in the file menu
     public void onSave() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save file");
@@ -190,15 +198,11 @@ public class Controller {
                 }
             }
             // If user choose svg format
-            if (fileChooser.getSelectedExtensionFilter().getDescription().equals("svg")) {
-                FileWriter fileWriter = null;
-                try {
+            try {
+                if (fileChooser.getSelectedExtensionFilter().getDescription().equals("svg")) {
+                    FileWriter fileWriter;
                     fileWriter = new FileWriter(file.getAbsoluteFile());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-                try {
+                    BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
                     bufferedWriter.write("<svg height=\""+canvas.getHeight()+"\" width=\""+canvas.getWidth()+"\" xmlns=\"http://www.w3.org/2000/svg\">");
                     bufferedWriter.newLine();
                     for (Shape shape : model.getShapeList()) {
@@ -207,22 +211,25 @@ public class Controller {
                     }
                     bufferedWriter.write("</svg>");
                     bufferedWriter.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         });
     }
 
+    // when exit is clicked in the file menu
     public void onExit() {
         // TODO: exit confirmation
         Platform.exit();
     }
 
+    // about is clicked in the info menu
     public void onAbout() {
         // TODO: add some info about the paint app here in a new window.
     }
 
+    // when undo button is pressed
     public void undo() {
         undoButton.setDisable(true);
         menuUndo.setDisable(true);
@@ -232,6 +239,7 @@ public class Controller {
 
     }
 
+    // when redo button is pressed
     public void redo() {
         redoButton.setDisable(true);
         menuRedo.setDisable(true);
