@@ -7,9 +7,11 @@ import java.util.ArrayList;
 
 public class Model {
 
+    // fields
     private ObservableList<String> shapeChoices = FXCollections.observableList(new ArrayList<>());
     private ObservableList<Shape> shapeList = FXCollections.observableList(new ArrayList<>());
 
+    // getters and setters
     public ObservableList<Shape> getShapeList() {
         return shapeList;
     }
